@@ -1,0 +1,52 @@
+<html>
+<head>
+<script src="jq.js"></script>
+<script src="ul.js"></script>
+<script src="pp.js"></script>
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 110%;
+}
+form {
+	margin: 0;
+	padding: 5px;
+	background-color: #eee;
+}
+input {
+	font-size: 100%;
+}
+#text {
+	width: 60%;
+}
+#submit, #paste {
+	width: 18%;
+}
+#result {
+	padding: 5px;
+	min-height: 100%;
+}
+.phonetic {
+	font-weight: normal;
+	font-size: 90%;
+}
+.ext {
+	display: none;
+}
+.web {
+	font-size: 80%;
+	margin: 0.6em;
+}
+</style>
+</head>
+<body>
+	<form action="javascipt://void(null)">
+		<input id="text" type="text" />
+		<input id="paste" type="button" value="Paste" />
+		<input id="submit" type="submit" value="Submit" />
+	</form>
+	<div id="result" name="result"></div>
+</body>
+</html>
