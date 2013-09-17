@@ -21,6 +21,9 @@
 	"content_scripts": [
 		{"matches": ["<all_urls>"], "js": ["cs.js"]}
 	],
+	"omnibox": {
+		"keyword" : "def"
+	},
 */
 	"browser_action": {
 		"default_icon": "icon32.png",

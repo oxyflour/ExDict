@@ -73,3 +73,32 @@ chrome.contextMenus.onClicked.addListener(function(d, t) {
 	}, 1000)
 */
 })
+/*
+chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
+	$.getJSON("http://fanyi.youdao.com/openapi.do", {
+		keyfrom: "exDict",
+		key: 1290470647,
+		type: "data",
+		doctype: "json",
+		version: 1.1,
+		q: text
+	}, function(d) {
+		suggest([
+			{content: text + " one", description: "the first one: " + d.errorCode},
+			{content: text + " number two", description: "the second entry" + text}
+		]);
+	});
+});
+chrome.omnibox.onInputEntered.addListener(function(text) {
+	$.getJSON("http://fanyi.youdao.com/openapi.do", {
+		keyfrom: "exDict",
+		key: 1290470647,
+		type: "data",
+		doctype: "json",
+		version: 1.1,
+		q: text
+	}, function(d) {
+		alert('You just typed "' + text + '"(' + d.errorCode + ')');
+	});
+});
+*/
