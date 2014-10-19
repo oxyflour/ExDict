@@ -33,7 +33,7 @@ app.controller('main', function ($scope, $timeout, youdao) {
 		elem.focus().select()
 		document.execCommand("paste")
 		elem.focus().select()
-		$scope.apply()
+		$scope.queryForm.queryText.$commitViewValue()
 	}
 	$timeout($scope.pasteQuery, 200)
 })

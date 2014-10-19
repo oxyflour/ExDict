@@ -41,8 +41,8 @@
 </style>
 </head>
 <body ng-app="app" ng-controller="main">
-	<form class="query">
-		<input class="text" type="text" ng-model="query"
+	<form class="query" name="queryForm">
+		<input class="text" type="text" ng-model="query" name="queryText"
 			ng-model-options="{ updateOn:'default blur', debounce: { default:500, blur:0 } }" />
 		<input class="paste" type="button" value="Paste" ng-click="pasteQuery()" />
 	</form>
