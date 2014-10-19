@@ -22,9 +22,16 @@ app.factory('youdao', function ($http) {
 	}
 })
 app.controller('main', function ($scope, $timeout, youdao) {
+	var waitingResult;
 	$scope.$watch('query', function(v, v0) {
-		$scope.result = undefined
-		if (v) youdao.query(v, function(data) {
+		if (!v) {
+			return $scope.result = undefined
+		}
+		waitingResult = $timeout(function() {
+			$scope.result = undefined
+		}, 200)
+		youdao.query(v, function(data) {
+			$timeout.cancel(waitingResult)
 			$scope.result = data
 		})
 	})
@@ -35,5 +42,5 @@ app.controller('main', function ($scope, $timeout, youdao) {
 		elem.focus().select()
 		$scope.queryForm.queryText.$commitViewValue()
 	}
-	$timeout($scope.pasteQuery, 200)
+	$timeout($scope.pasteQuery, 100)
 })
