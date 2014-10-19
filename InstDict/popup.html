@@ -1,0 +1,84 @@
+<html>
+<head>
+<style>
+	html, body {
+		margin: 0;
+		padding: 0;
+		width: 360px;
+		height: 240px;
+	}
+	form.query {
+		margin: 0;
+		padding: 5px;
+		background-color: #eee;
+		white-space: nowrap;
+	}
+	.query .text {
+		width: 80%;
+	}
+	.paste .paste {
+		width: 18%;
+	}
+	.basic h3 {
+		margin-left: -5px;
+		padding-left: 10px;
+		border-left: 10px solid #aaa;
+	}
+	.result {
+		padding: 5px;
+		padding-top: 0;
+		max-height: 500px;
+		overflow: auto;
+	}
+	.phonetic {
+		font-weight: normal;
+		font-size: 90%;
+	}
+	.web {
+		font-size: 80%;
+		margin: 0.6em;
+	}
+</style>
+</head>
+<body ng-app="app" ng-controller="main">
+	<form class="query">
+		<input class="text" type="text" ng-model="query"
+			ng-model-options="{ updateOn:'default blur', debounce: { default:500, blur:0 } }" />
+		<input class="paste" type="button" value="Paste" ng-click="pasteQuery()" />
+	</form>
+	<div class="result">
+		<div ng-if="result.httpError">
+			There is sth wrong with the network...
+			<p>Error Code: {{ result.httpError }}</p>
+		</div>
+		<div ng-if="result.errorCode > 0" ng-switch="result.errorCode">
+			<p ng-switch-on="20">Text Too Long</p>
+			<p ng-switch-on="30">Can not Translate this text</p>
+			<p ng-switch-on="40">Unknown Language</p>
+			<p ng-switch-on="50">Invalid Key</p>
+			<p ng-switch-default>Unknown Error</p>
+		</div>
+		<div ng-if="!result.errorCode">
+			<div class="basic">
+				<h3>
+					{{ result.translation.join(', ') }}
+					<span class="phonetic" ng-show="result.basic.phonetic">
+						&frasl;{{ result.basic.phonetic }}&frasl;
+					</span>
+				</h3>
+				<p><div ng-repeat="explain in result.basic.explains">{{ explain }}</div></p>
+			</div>
+			<div class="ext">
+				<h4 ng-show="result.web.length">Web Explainations ({{ result.web.length }})</h4>
+				<p ng-repeat="exp in result.web" class="web">
+					<strong>{{ exp.key }}</strong>: {{ exp.value.join(', ') }}
+				</p>
+			</div>
+		</div>
+		<p ng-hide="result">Waiting...</p>
+	</div>
+</body>
+<script src="jquery-2.1.1.min.js"></script>
+<script src="angular.min.js"></script>
+<script src="index.js"></script>
+</html>

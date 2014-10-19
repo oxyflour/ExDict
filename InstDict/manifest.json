@@ -1,9 +1,9 @@
 {
 	"manifest_version": 2,
 
-	"name": "Extention Dictionary",
-	"description": "An Easy Dictionary Powerded by Youdao",
-	"version": "1.0",
+	"name": "Instant Dictionary",
+	"description": "A simple and fast dictionary that allows you to get results while typing. Powerded by Youdao",
+	"version": "0.2",
 
 	"permissions": [
 		"clipboardRead",
@@ -13,7 +13,7 @@
 	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 	"browser_action": {
 		"default_icon": "icon32.png",
-		"default_popup": "pp.html"
+		"default_popup": "popup.html"
 	},
 	"icons": {
 		"128": "icon128.png",
