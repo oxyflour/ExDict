@@ -52,13 +52,14 @@
 			<p>Error Code: {{ result.httpError }}</p>
 		</div>
 		<div ng-if="result.errorCode > 0" ng-switch="result.errorCode">
-			<p ng-switch-on="20">Text Too Long</p>
-			<p ng-switch-on="30">Can not Translate this text</p>
-			<p ng-switch-on="40">Unknown Language</p>
-			<p ng-switch-on="50">Invalid Key</p>
+			<p ng-switch-when="20">Text Too Long</p>
+			<p ng-switch-when="30">Can not Translate this text</p>
+			<p ng-switch-when="40">Unknown Language</p>
+			<p ng-switch-when="50">Invalid Key</p>
 			<p ng-switch-default>Unknown Error</p>
 		</div>
-		<div ng-if="!result.errorCode">
+		<p ng-hide="result">Waiting...</p>
+		<div ng-hide="result.errorCode">
 			<div class="basic">
 				<h3>
 					{{ result.translation.join(', ') }}
@@ -75,7 +76,6 @@
 				</p>
 			</div>
 		</div>
-		<p ng-hide="result">Waiting...</p>
 	</div>
 </body>
 <script src="jquery-2.1.1.min.js"></script>
