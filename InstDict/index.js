@@ -23,12 +23,12 @@ app.factory('youdao', function ($http) {
 app.factory('baidu', function($http) {
 	function queryText(content, callback) {
 		$http({
-			url: content.search(/\s/) >= 0 ?
+			url: content.length > 20 || content.search(/\s/) >= 0 ?
 				'http://openapi.baidu.com/public/2.0/bmt/translate' :
 				'http://openapi.baidu.com/public/2.0/translate/dict/simple',
 			method: 'GET',
 			params: {
-				from: 'en',
+				from: 'auto',
 				to: 'zh',
 				client_id: 'iMYR92MYOqSqxgcHW5jUsjq1',
 				q: content
@@ -71,19 +71,29 @@ app.factory('bing', function ($http) {
 				text: content,
 			}
 		}).success(function(data, status) {
-			if (data.search('"ArgumentException:') !== 0) {
+			if (data.search('"ArgumentException:') == 0) {
+				console.log('bing translating error: ' + data)
+				getToken(function(data) {
+					data.access_token ?
+						queryText(content, callback) :
+						callback({ loginError: data })
+				})
+			}
+			else {
 				callback({ text: data })
 			}
-			else getToken(function(data) {
-				data.access_token ?
-					queryText(content, callback) :
-					callback({ loginError: data })
-			})
 		}).error(function(data, status) {
 			callback({ httpError: status })
 		})
 	}
 	return queryText
+})
+app.factory('translateProvider', function(youdao, bing, baidu) {
+	return {
+		youdao: youdao,
+		bing: bing,
+		baidu: baidu
+	}
 })
 app.directive('localStorage', function() {
     return {
@@ -103,7 +113,7 @@ app.directive('localStorage', function() {
         },
     };
 })
-app.controller('main', function ($scope, $timeout, youdao, bing, baidu) {
+app.controller('main', function ($scope, $timeout, translateProvider) {
 	var waitingResult;
 	$scope.$watch('query+source', function(v, v0) {
 		if (!$scope.query) {
@@ -113,15 +123,11 @@ app.controller('main', function ($scope, $timeout, youdao, bing, baidu) {
 			$scope.result = undefined
 		}, 300)
 
-		var srv = ({
-			youdao: youdao,
-			bing: bing,
-			baidu: baidu
-		})[$scope.source]
-
+		var srv = translateProvider[$scope.source]
 		if (!srv) {
-			$scope.source = 'youdao'
 			$timeout.cancel(waitingResult)
+			// let's try youdao by default
+			$scope.source = 'youdao'
 		}
 		else srv($scope.query, function(data) {
 			$timeout.cancel(waitingResult)
@@ -129,6 +135,7 @@ app.controller('main', function ($scope, $timeout, youdao, bing, baidu) {
 			$scope.result.source = $scope.source
 		})
 	})
+	$scope.providers = translateProvider
 	$scope.pasteQuery = function() {
 		var elem = $('input[ng-model=query]')
 		elem.focus().select()

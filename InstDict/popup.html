@@ -6,6 +6,7 @@
 		padding: 0;
 		width: 360px;
 		height: 240px;
+		font-size: 90%;
 	}
 	form.query {
 		margin: 0;
@@ -48,12 +49,7 @@
 	</form>
 	<div class="result" ng-switch="result.source">
 		<p style="float:right">
-			from
-			<select ng-model="source" local-storage>
-				<option>youdao</option>
-				<option>bing</option>
-				<option>baidu</option>
-			</select>
+			<select ng-model="source" local-storage ng-options="k as k for (k, v) in providers"></select>
 		</p>
 		<p ng-hide="result">Waiting...</p>
 		<div ng-if="result.httpError">
@@ -62,20 +58,23 @@
 		</div>
 		<div ng-switch-when="youdao">
 			<div ng-if="result.errorCode > 0" ng-switch="result.errorCode">
-				<p ng-switch-when="20">Text Too Long</p>
-				<p ng-switch-when="30">Can not Translate this text</p>
-				<p ng-switch-when="40">Unknown Language</p>
-				<p ng-switch-when="50">Invalid Key</p>
+				<p ng-switch-when="20">ERR: Text Too Long</p>
+				<p ng-switch-when="30">ERR: Can not Translate this text</p>
+				<p ng-switch-when="40">ERR: Unknown Language</p>
+				<p ng-switch-when="50">ERR: Invalid Key</p>
 				<p ng-switch-default>Unknown Error</p>
 			</div>
 			<div ng-hide="result.errorCode">
 				<div class="basic">
-					<h3>
+					<h3 ng-if="result.basic">
 						{{ result.translation.join(', ') }}
 						<span class="phonetic" ng-show="result.basic.phonetic">
 							&frasl;{{ result.basic.phonetic }}&frasl;
 						</span>
 					</h3>
+					<p ng-if="!result.basic">
+						{{ result.translation.join(', ') }}
+					</p>
 					<p><div ng-repeat="explain in result.basic.explains">{{ explain }}</div></p>
 				</div>
 				<div class="ext">
@@ -98,7 +97,7 @@
 					<h3>{{ result.data.word_name }}</h3>
 				</div>
 				<div ng-repeat="symbol in result.data.symbols">
-					<strong>&frasl;{{ symbol.ph_en }}&frasl;</strong>
+					<strong ng-show="symbol.ph_en">&frasl;{{ symbol.ph_en }}&frasl;</strong>
 					<div ng-repeat="part in symbol.parts">
 						{{ part.part }} {{ part.means.join('; ') }}
 					</div>
