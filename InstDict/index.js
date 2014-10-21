@@ -64,6 +64,7 @@ app.factory('bing', function ($http) {
 		$http({
 			url: 'http://api.microsofttranslator.com/V2/Ajax.svc/Translate',
 			method: 'GET',
+			responseType: 'json',
 			params: {
 				appId: 'Bearer ' + localStorage.getItem('bing_access_token'),
 				from: '',
@@ -71,7 +72,7 @@ app.factory('bing', function ($http) {
 				text: content,
 			}
 		}).success(function(data, status) {
-			if (data.search('"ArgumentException:') == 0) {
+			if (data.search('ArgumentException:') == 0) {
 				console.log('bing translating error: ' + data)
 				getToken(function(data) {
 					data.access_token ?
