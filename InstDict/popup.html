@@ -46,35 +46,70 @@
 			ng-model-options="{ updateOn:'default blur', debounce: { default:500, blur:0 } }" />
 		<input class="paste" type="button" value="Paste" ng-click="pasteQuery()" />
 	</form>
-	<div class="result">
+	<div class="result" ng-switch="result.source">
+		<p style="float:right">
+			from
+			<select ng-model="source" local-storage>
+				<option>youdao</option>
+				<option>bing</option>
+				<option>baidu</option>
+			</select>
+		</p>
+		<p ng-hide="result">Waiting...</p>
 		<div ng-if="result.httpError">
 			There is sth wrong with the network...
 			<p>Error Code: {{ result.httpError }}</p>
 		</div>
-		<div ng-if="result.errorCode > 0" ng-switch="result.errorCode">
-			<p ng-switch-when="20">Text Too Long</p>
-			<p ng-switch-when="30">Can not Translate this text</p>
-			<p ng-switch-when="40">Unknown Language</p>
-			<p ng-switch-when="50">Invalid Key</p>
-			<p ng-switch-default>Unknown Error</p>
+		<div ng-switch-when="youdao">
+			<div ng-if="result.errorCode > 0" ng-switch="result.errorCode">
+				<p ng-switch-when="20">Text Too Long</p>
+				<p ng-switch-when="30">Can not Translate this text</p>
+				<p ng-switch-when="40">Unknown Language</p>
+				<p ng-switch-when="50">Invalid Key</p>
+				<p ng-switch-default>Unknown Error</p>
+			</div>
+			<div ng-hide="result.errorCode">
+				<div class="basic">
+					<h3>
+						{{ result.translation.join(', ') }}
+						<span class="phonetic" ng-show="result.basic.phonetic">
+							&frasl;{{ result.basic.phonetic }}&frasl;
+						</span>
+					</h3>
+					<p><div ng-repeat="explain in result.basic.explains">{{ explain }}</div></p>
+				</div>
+				<div class="ext">
+					<h4 ng-show="result.web.length">Web Explainations ({{ result.web.length }})</h4>
+					<p ng-repeat="exp in result.web" class="web">
+						<strong>{{ exp.key }}</strong>: {{ exp.value.join(', ') }}
+					</p>
+				</div>
+			</div>
 		</div>
-		<p ng-hide="result">Waiting...</p>
-		<div ng-hide="result.errorCode">
-			<div class="basic">
-				<h3>
-					{{ result.translation.join(', ') }}
-					<span class="phonetic" ng-show="result.basic.phonetic">
-						&frasl;{{ result.basic.phonetic }}&frasl;
-					</span>
-				</h3>
-				<p><div ng-repeat="explain in result.basic.explains">{{ explain }}</div></p>
+		<div ng-switch-when="baidu">
+			<p ng-if="result.errno">
+				Translate failed (errno {{result.errno}})
+			</p>
+			<p ng-hide="result.errno || result.data.word_name || result.trans_result">
+				No definition found
+			</p>
+			<div ng-if="result.data.word_name">
+				<div class="basic">
+					<h3>{{ result.data.word_name }}</h3>
+				</div>
+				<div ng-repeat="symbol in result.data.symbols">
+					<strong>&frasl;{{ symbol.ph_en }}&frasl;</strong>
+					<div ng-repeat="part in symbol.parts">
+						{{ part.part }} {{ part.means.join('; ') }}
+					</div>
+				</div>
 			</div>
-			<div class="ext">
-				<h4 ng-show="result.web.length">Web Explainations ({{ result.web.length }})</h4>
-				<p ng-repeat="exp in result.web" class="web">
-					<strong>{{ exp.key }}</strong>: {{ exp.value.join(', ') }}
-				</p>
+			<div ng-if="result.trans_result">
+				<p ng-repeat="result in result.trans_result">{{ result.dst }}</p>
 			</div>
+		</div>
+		<div ng-switch-when="bing">
+			<p>{{ result.text }}</p>
 		</div>
 	</div>
 </body>
