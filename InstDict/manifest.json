@@ -2,8 +2,8 @@
 	"manifest_version": 2,
 
 	"name": "Instant Dictionary",
-	"description": "A simple and fast dictionary that allows you to get results while typing. Powerded by Youdao",
-	"version": "0.2",
+	"description": "A simple and fast dictionary that allows you to get results while typing. Powered by Youdao/Bing/Baidu",
+	"version": "0.21",
 
 	"permissions": [
 		"clipboardRead",
